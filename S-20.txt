@@ -1,0 +1,156 @@
+----------------Topological sorting---------------
+#include <stdio.h>
+#include<stdlib.h>
+//#include<conio.h>
+#define MAXSIZE 20
+typedef struct
+{
+    int data[MAXSIZE];
+    int top;
+}STACK;
+void init(STACK *ps)
+{
+  ps->top=-1;
+}
+int isempty(STACK *ps)
+{
+  return(ps->top==-1);
+}
+void push(STACK *ps, int n)
+{
+  ps->data[++ps->top]=n;
+}
+int pop(STACK *ps)
+{
+  return ps->data[ps->top--];
+}
+
+void topological_sort(int m[10][10],int n)
+ {
+    int i,j,v,w;
+    int indeg[10];
+    int visited[10]={0};
+    printf("Enter the matrix:");
+    for(i=0;i<n;i++)
+        {
+            for(j=0;j<n;j++)
+            {
+                scanf("%d",&m[i][j]);
+            }
+        }
+
+    for(i=0;i<n;i++)
+        {
+        indeg[i]=0;
+        for(j=0;j<n;j++)
+        {
+            if(i!=j)
+            indeg[i] = indeg[i]+ m[j][i];
+        }
+
+        printf("Indegree of v%d=%d\t",i+1,indeg[i]);
+
+ }
+   printf("\nTopological sort: ");
+    STACK s;
+    init(&s);
+    while(1)
+    {
+     for(v=0;v<n;v++)
+         if((visited[v]==0)&&(indeg[v]==0))
+         {
+             visited[v]=1;
+             push(&s,v);
+             printf("v%d",v+1);
+         }
+     if(isempty(&s))
+        break;
+     v=pop(&s);
+     for(w=0;w<n;w++)
+         if(m[v][w]==1)
+            indeg[w]=indeg[w]-1;
+   }
+}
+int main()
+{
+    //int m[4][4]={{0,1,1,0},{0,0,1,1},{0,0,0,1},{0,0,0,0}};
+    int m[10][10],n;
+    printf("How many vertices :");
+    scanf("%d",&n);
+       topological_sort(m,n);
+
+}
+-------------------N Queens Problem--------
+#include<stdio.h>
+#include<math.h>
+ 
+int board[20],count;
+ 
+int main()
+{
+int n,i,j;
+void queen(int row,int n);
+ 
+printf(" - N Queens Problem Using Backtracking -");
+printf("\n\nEnter number of Queens:");
+scanf("%d",&n);
+queen(1,n);
+return 0;
+}
+ 
+//function for printing the solution
+void print(int n)
+{
+int i,j;
+printf("\n\nSolution %d:\n\n",++count);
+ 
+for(i=1;i<=n;++i)
+  printf("\t%d",i);
+ 
+for(i=1;i<=n;++i)
+{
+  printf("\n\n%d",i);
+  for(j=1;j<=n;++j) //for nxn board
+  {
+   if(board[i]==j)
+    printf("\tQ"); //queen at i,j position
+   else
+    printf("\t-"); //empty slot
+  }
+}
+}
+ 
+/*funtion to check conflicts
+If no conflict for desired postion returns 1 otherwise returns 0*/
+int place(int row,int column)
+{
+int i;
+for(i=1;i<=row-1;++i)
+{
+  //checking column and digonal conflicts
+  if(board[i]==column)
+   return 0;
+  else
+   if((board[i]-column)==(i-row))
+    return 0;
+}
+ 
+return 1; //no conflicts
+}
+ 
+//function to check for proper positioning of queen
+void queen(int row,int n)
+{
+int column;
+for(column=1;column<=n;++column)
+{
+  if(place(row,column))
+  {
+   board[row]=column; //no conflicts so place queen
+   if(row==n) //dead end
+    print(n); //printing the board configuration
+   else //try queen with next position
+    queen(row+1,n);
+  }
+}
+}

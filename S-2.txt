@@ -1,0 +1,80 @@
+------------------------------ Heapsort ------------------
+#include<stdio.h>
+
+void selectionsort(int a[],int n);
+void display(int a[],int n);
+int main()
+{
+    int a[10],i,n;
+  printf("\n Enter the number of elements:");
+  scanf("%d",&n);
+  printf("\n Enter array elements:");
+  for(i=0;i<n;i++)
+    scanf("%d",&a[i]);
+  printf("\n Sorted elements are:");
+heapsort(a,n);
+  display(a,n);
+}
+void display(int a[],int n)
+{
+    int i;
+    for(i=0;i<n;i++)
+     printf("\t%d",a[i]);
+}
+
+void heapsort(int a[], int n,int i)
+{
+    int largest=i;
+int l=(2*i)+1;
+int r=(2*i)+1;
+while(l<=n && a[l]>a[largest])
+{
+largest=l;
+}
+while(r<=n && a[r]>a[largest])
+{
+largest=r;
+}
+if(largest!=i)
+{
+a[largest]=a[i];
+
+ heapsort(a,n, largest);
+}
+}
+
+   --------------------------- Strassen’s Matrix multiplication------------------------
+#include <stdio.h>
+#include <string.h>
+#define INT_MAX 999999
+int mc[50][50];
+int min(int a, int b){
+   if(a < b)
+      return a;
+   else
+      return b;
+}
+int DynamicProgramming(int c[], int i, int j){
+   if (i == j) {
+      return 0;
+   }
+   if (mc[i][j] != -1) {
+      return
+         mc[i][j];
+   }
+   mc[i][j] = INT_MAX;
+   for (int k = i; k < j; k++) {
+      mc[i][j] = min(mc[i][j], DynamicProgramming(c, i, k) + DynamicProgramming(c, k + 1, j) + c[i - 1] * c[k] * c[j]);
+   }
+   return mc[i][j];
+}
+int Matrix(int c[], int n){
+   int i = 1, j = n - 1;
+   return DynamicProgramming(c, i, j);
+}
+int main(){
+   int arr[] = { 23, 26, 27, 20 };
+   int n = sizeof(arr) / sizeof(arr[0]);
+   memset(mc, -1, sizeof mc);
+   printf("Minimum number of multiplications is: %d", Matrix(arr, n));
+}

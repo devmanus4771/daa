@@ -1,0 +1,146 @@
+---------------------Hamiltonian cycle------------------
+
+#include <stdio.h>
+#define NODE 5
+int graph[NODE][NODE] = {
+   {0, 1, 0, 1, 0},
+   {1, 0, 1, 1, 1},
+   {0, 1, 0, 0, 1},
+   {1, 1, 0, 0, 1},
+   {0, 1, 1, 1, 0},
+};
+int path[NODE];
+// Function to display the Hamiltonian cycle
+void displayCycle() {
+   printf("Cycle Found: ");
+   for (int i = 0; i < NODE; i++)
+      printf("%d ", path[i]);
+   // Print the first vertex again
+   printf("%d\n", path[0]);
+}
+// Function to check if adding vertex v to the path is valid
+int isValid(int v, int k) {
+   // If there is no edge between path[k-1] and v
+   if (graph[path[k - 1]][v] == 0)
+      return 0;
+   // Check if vertex v is already taken in the path
+   for (int i = 0; i < k; i++)
+      if (path[i] == v)
+         return 0;
+   return 1;
+}
+// Function to find the Hamiltonian cycle
+int cycleFound(int k) {
+   // When all vertices are in the path
+   if (k == NODE) {
+      // Check if there is an edge between the last and first vertex
+      if (graph[path[k - 1]][path[0]] == 1)
+         return 1;
+      else
+         return 0;
+   }
+   // Try adding each vertex (except the starting point) to the path
+   for (int v = 1; v < NODE; v++) {
+      if (isValid(v, k)) {
+         path[k] = v;
+         if (cycleFound(k + 1) == 1)
+            return 1;
+         // Backtrack: Remove v from the path
+         path[k] = -1;
+      }
+   }
+   return 0;
+}
+// Function to find and display the Hamiltonian cycle
+int hamiltonianCycle() {
+   for (int i = 0; i < NODE; i++)
+      path[i] = -1;
+   // Set the first vertex as 0
+   path[0] = 0;
+   if (cycleFound(1) == 0) {
+      printf("Solution does not exist\n");
+      return 0;
+   }
+   displayCycle();
+   return 1;
+}
+int main() {
+   hamiltonianCycle();
+   return 0;
+}
+
+
+----------------------------f 4 queens’ problem-----------------
+#include<stdio.h>
+#include<math.h>
+ 
+int board[20],count;
+ 
+int main()
+{
+int n,i,j;
+void queen(int row,int n);
+ 
+printf(" - N Queens Problem Using Backtracking -");
+printf("\n\nEnter number of Queens:");
+scanf("%d",&n);
+queen(1,n);
+return 0;
+}
+ 
+//function for printing the solution
+void print(int n)
+{
+int i,j;
+printf("\n\nSolution %d:\n\n",++count);
+ 
+for(i=1;i<=n;++i)
+  printf("\t%d",i);
+ 
+for(i=1;i<=n;++i)
+{
+  printf("\n\n%d",i);
+  for(j=1;j<=n;++j) //for nxn board
+  {
+   if(board[i]==j)
+    printf("\tQ"); //queen at i,j position
+   else
+    printf("\t-"); //empty slot
+  }
+}
+}
+ 
+/*funtion to check conflicts
+If no conflict for desired postion returns 1 otherwise returns 0*/
+int place(int row,int column)
+{
+int i;
+for(i=1;i<=row-1;++i)
+{
+  //checking column and digonal conflicts
+  if(board[i]==column)
+   return 0;
+  else
+   if((board[i]-column)==(i-row))
+    return 0;
+}
+ 
+return 1; //no conflicts
+}
+ 
+//function to check for proper positioning of queen
+void queen(int row,int n)
+{
+int column;
+for(column=1;column<=n;++column)
+{
+  if(place(row,column))
+  {
+   board[row]=column; //no conflicts so place queen
+   if(row==n) //dead end
+    print(n); //printing the board configuration
+   else //try queen with next position
+    queen(row+1,n);
+  }
+}
+}
